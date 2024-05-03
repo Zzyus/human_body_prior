@@ -254,7 +254,7 @@ class BodyModel(nn.Module):
             shape_components = betas
             shapedirs = self.shapedirs
 
-        verts, Jtr = lbs(betas=shape_components, pose=full_pose, v_template=v_template,
+        verts, Jtr, transforms = lbs(betas=shape_components, pose=full_pose, v_template=v_template,
                             shapedirs=shapedirs, posedirs=self.posedirs,
                             J_regressor=self.J_regressor, parents=self.kintree_table[0].long(),
                             lbs_weights=self.weights, joints=joints, v_shaped=v_shaped,
@@ -262,11 +262,14 @@ class BodyModel(nn.Module):
 
         Jtr = Jtr + trans.unsqueeze(dim=1)
         verts = verts + trans.unsqueeze(dim=1)
+        
 
+        # 
         res = {}
         res['v'] = verts
         res['f'] = self.f
         res['Jtr'] = Jtr  # Todo: ik can be made with vposer
+        res['transforms'] = transforms
         # res['bStree_table'] = self.kintree_table
 
         # if self.model_type == 'smpl':

@@ -234,7 +234,8 @@ def lbs(betas, pose, v_template, shapedirs, posedirs, J_regressor, parents,
 
     v_posed = pose_offsets + v_shaped
     # 4. Get the global joint location
-    J_transformed, A = batch_rigid_transform(rot_mats, J, parents, dtype=dtype)
+    J_transformed, A, transforms = batch_rigid_transform(rot_mats, J, parents, dtype=dtype)
+
 
     # 5. Do skinning:
     # W is N x V x (J + 1)
@@ -251,7 +252,7 @@ def lbs(betas, pose, v_template, shapedirs, posedirs, J_regressor, parents,
 
     verts = v_homo[:, :, :3, 0]
 
-    return verts, J_transformed
+    return verts, J_transformed, transforms
 
 
 def vertices2joints(J_regressor, vertices):
@@ -397,8 +398,13 @@ def batch_rigid_transform(rot_mats, joints, parents, dtype=torch.float32):
     posed_joints = transforms[:, :, :3, 3]
 
     joints_homogen = F.pad(joints, [0, 0, 0, 1])
+    # x = F.pad(
+    #     torch.matmul(transforms, joints_homogen), [3, 0, 0, 0, 0, 0, 0, 0])
+    # print(transforms[152, 15])
+    # print(joints_homogen[152, 15])
+    # print(x[152, 15])
 
     rel_transforms = transforms - F.pad(
         torch.matmul(transforms, joints_homogen), [3, 0, 0, 0, 0, 0, 0, 0])
 
-    return posed_joints, rel_transforms
+    return posed_joints, rel_transforms, transforms
