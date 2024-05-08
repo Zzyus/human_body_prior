@@ -29,7 +29,7 @@ VPoser has the following features:
 
 ## Installation
 **Requirements**
-- Python 3.8
+- Python 3.7
 
 [comment]: <> (- [Torchgeometry 0.1.2]&#40;https://pypi.org/project/torchgeometry/0.1.2/&#41;)
 
