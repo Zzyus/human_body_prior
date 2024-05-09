@@ -263,7 +263,8 @@ class BodyModel(nn.Module):
         Jtr = Jtr + trans.unsqueeze(dim=1)
         verts = verts + trans.unsqueeze(dim=1)
         
-
+        print(transforms[:, :, :3, 3].shape, trans.unsqueeze(dim=1).shape)
+        transforms[:, :, :3, 3] += trans.unsqueeze(dim=1)
         # 
         res = {}
         res['v'] = verts
